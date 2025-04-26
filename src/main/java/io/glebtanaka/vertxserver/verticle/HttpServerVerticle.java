@@ -21,6 +21,13 @@ public class HttpServerVerticle extends AbstractVerticle {
                 .end("<h1>Hello from HttpServerVerticle!</h1>");
         });
 
+        // Handle requests to the /hello path
+        router.get("/hello").handler(ctx -> {
+            ctx.response()
+                .putHeader("content-type", "text/html")
+                .end("<h1>Hello World!</h1>");
+        });
+
         // Create the HTTP server
         vertx.createHttpServer()
             .requestHandler(router)
