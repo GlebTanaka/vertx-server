@@ -1,4 +1,4 @@
-package io.glebtanaka;
+package io.glebtanaka.vertxserver.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;

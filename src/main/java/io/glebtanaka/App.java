@@ -1,6 +1,7 @@
 package io.glebtanaka;
 
 import io.vertx.core.Vertx;
+import io.glebtanaka.vertxserver.verticle.HttpServerVerticle;
 
 /**
  * Vert.x HTTP Server Example
