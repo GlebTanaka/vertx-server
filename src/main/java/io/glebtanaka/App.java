@@ -1,12 +1,11 @@
 package io.glebtanaka;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.Router;
+import io.glebtanaka.vertxserver.verticle.HttpServerVerticle;
+import io.glebtanaka.vertxserver.util.VerticleLoader;
 
 /**
- * Vert.x HTTP Server Example
+ * Vert.x HTTP Server Example with Auto-loading Verticles
  */
 public class App 
 {
@@ -15,28 +14,16 @@ public class App
         // Create a Vertx instance
         Vertx vertx = Vertx.vertx();
 
-        // Create a Router
-        Router router = Router.router(vertx);
+        // Deploy the HttpServerVerticle manually
+        vertx.deployVerticle(new HttpServerVerticle(), res -> {
+            if (res.succeeded()) {
+                System.out.println("HttpServerVerticle deployed successfully with ID: " + res.result());
 
-        // Handle requests to the root path
-        router.get("/").handler(ctx -> {
-            HttpServerResponse response = ctx.response();
-            response.putHeader("content-type", "text/html");
-            response.end("<h1>Hello from Vert.x!</h1>");
-        });
-
-        // Create the HTTP server
-        HttpServer server = vertx.createHttpServer();
-
-        // Handle requests using the router
-        server.requestHandler(router);
-
-        // Start the server on port 8080
-        server.listen(8080, result -> {
-            if (result.succeeded()) {
-                System.out.println("Server is now listening on port 8080");
+                // Auto-load and deploy verticles from the autoload package
+                System.out.println("Auto-loading verticles from package...");
+                VerticleLoader.deployVerticlesFromPackage(vertx, "io.glebtanaka.vertxserver.verticle.autoload");
             } else {
-                System.out.println("Failed to start server: " + result.cause());
+                System.out.println("Failed to deploy HttpServerVerticle: " + res.cause());
             }
         });
     }
