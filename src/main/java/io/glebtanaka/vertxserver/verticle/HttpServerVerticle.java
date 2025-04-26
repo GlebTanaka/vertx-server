@@ -2,6 +2,7 @@ package io.glebtanaka.vertxserver.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
 /**
@@ -26,6 +27,18 @@ public class HttpServerVerticle extends AbstractVerticle {
             ctx.response()
                 .putHeader("content-type", "text/html")
                 .end("<h1>Hello World!</h1>");
+        });
+
+        // Handle requests to the /api/data path - returns JSON
+        router.get("/api/data").handler(ctx -> {
+            JsonObject jsonResponse = new JsonObject()
+                .put("message", "Hello from JSON API")
+                .put("status", "success")
+                .put("code", 200);
+
+            ctx.response()
+                .putHeader("content-type", "application/json")
+                .end(jsonResponse.encode());
         });
 
         // Create the HTTP server
